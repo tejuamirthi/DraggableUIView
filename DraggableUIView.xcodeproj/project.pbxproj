@@ -99,9 +99,10 @@
 		609F2DA9256051ED00CF9275 /* DraggableUIView */ = {
 			isa = PBXGroup;
 			children = (
+				609F2DD325605BEA00CF9275 /* Views */,
+				609F2DD225605BDD00CF9275 /* Models */,
 				609F2DAA256051ED00CF9275 /* DraggableUIView.h */,
 				609F2DAB256051ED00CF9275 /* Info.plist */,
-				609F2DCA256054F800CF9275 /* DraggableUIView.swift */,
 			);
 			path = DraggableUIView;
 			sourceTree = "<group>";
@@ -125,6 +126,21 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		609F2DD225605BDD00CF9275 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		609F2DD325605BEA00CF9275 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				609F2DCA256054F800CF9275 /* DraggableUIView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
