@@ -14,6 +14,7 @@
 		609F2DC02560539000CF9275 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 609F2DBE2560539000CF9275 /* Main.storyboard */; };
 		609F2DC22560539100CF9275 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 609F2DC12560539100CF9275 /* Assets.xcassets */; };
 		609F2DC52560539100CF9275 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 609F2DC32560539100CF9275 /* LaunchScreen.storyboard */; };
+		609F2DCB256054F800CF9275 /* DraggableUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609F2DCA256054F800CF9275 /* DraggableUIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		609F2DC12560539100CF9275 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		609F2DC42560539100CF9275 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		609F2DC62560539100CF9275 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		609F2DCA256054F800CF9275 /* DraggableUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableUIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 			children = (
 				609F2DAA256051ED00CF9275 /* DraggableUIView.h */,
 				609F2DAB256051ED00CF9275 /* Info.plist */,
+				609F2DCA256054F800CF9275 /* DraggableUIView.swift */,
 			);
 			path = DraggableUIView;
 			sourceTree = "<group>";
@@ -150,6 +153,7 @@
 				TargetAttributes = {
 					609F2DA6256051ED00CF9275 = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
 					};
 					609F2DB52560539000CF9275 = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -200,6 +204,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				609F2DCB256054F800CF9275 /* DraggableUIView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +363,7 @@
 		609F2DB0256051ED00CF9275 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -373,6 +379,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tejuamirthi.DraggableUIView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -381,6 +388,7 @@
 		609F2DB1256051ED00CF9275 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
