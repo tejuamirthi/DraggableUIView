@@ -15,7 +15,33 @@
 		609F2DC22560539100CF9275 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 609F2DC12560539100CF9275 /* Assets.xcassets */; };
 		609F2DC52560539100CF9275 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 609F2DC32560539100CF9275 /* LaunchScreen.storyboard */; };
 		609F2DCB256054F800CF9275 /* DraggableUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609F2DCA256054F800CF9275 /* DraggableUIView.swift */; };
+		609F2DCD256057B300CF9275 /* DraggableUIView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 609F2DA7256051ED00CF9275 /* DraggableUIView.framework */; };
+		609F2DCE256057B300CF9275 /* DraggableUIView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 609F2DA7256051ED00CF9275 /* DraggableUIView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		609F2DCF256057B300CF9275 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 609F2D9E256051ED00CF9275 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 609F2DA6256051ED00CF9275;
+			remoteInfo = DraggableUIView;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		609F2DD1256057B300CF9275 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				609F2DCE256057B300CF9275 /* DraggableUIView.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		609F2DA7256051ED00CF9275 /* DraggableUIView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DraggableUIView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				609F2DCD256057B300CF9275 /* DraggableUIView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +83,7 @@
 				609F2DA9256051ED00CF9275 /* DraggableUIView */,
 				609F2DB72560539000CF9275 /* Demo */,
 				609F2DA8256051ED00CF9275 /* Products */,
+				609F2DCC256057B300CF9275 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,6 +118,13 @@
 				609F2DC62560539100CF9275 /* Info.plist */,
 			);
 			path = Demo;
+			sourceTree = "<group>";
+		};
+		609F2DCC256057B300CF9275 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,10 +166,12 @@
 				609F2DB22560539000CF9275 /* Sources */,
 				609F2DB32560539000CF9275 /* Frameworks */,
 				609F2DB42560539000CF9275 /* Resources */,
+				609F2DD1256057B300CF9275 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				609F2DD0256057B300CF9275 /* PBXTargetDependency */,
 			);
 			name = Demo;
 			productName = Demo;
@@ -219,6 +256,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		609F2DD0256057B300CF9275 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 609F2DA6256051ED00CF9275 /* DraggableUIView */;
+			targetProxy = 609F2DCF256057B300CF9275 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		609F2DBE2560539000CF9275 /* Main.storyboard */ = {
