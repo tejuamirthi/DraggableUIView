@@ -26,6 +26,8 @@ public class DraggableUIView: UIView {
         panRecognizer.delegate = self
     }
     
+    /// Called when there's a pan gesture over the view
+    /// - Parameter recognizer: pan gesture itself is the argument to get the parameters
     @objc func detectPan(_ recognizer:UIPanGestureRecognizer) {
         let translation  = recognizer.translation(in: self.superview)
         let hWidth = self.bounds.width/2
@@ -55,15 +57,17 @@ public class DraggableUIView: UIView {
         
     }
     
+    /// Moving the view to nearest valid point after the drag
+    /// - Parameter gesture: gesture object is needed to make the gesture to not go over the head
     func moveToNearestPoint(_ gesture: UIPanGestureRecognizer){
         let point: CGPoint = getNearestPoint()
         UIView.animate(withDuration: 0.2) {
             self.center = point
             gesture.setTranslation(.zero, in: self)
         }
-        
     }
     
+    /// Getting the nearest point where the view can move it's center to
     func getNearestPoint() -> CGPoint {
         var finalX = self.center.x
         var finalY = self.center.y
