@@ -11,6 +11,7 @@ import UIKit
 public class DraggableUIView: UIView {
     
     public var mode: DraggableMode = .fourCorner
+    public var enableVelocity: Bool = true
     
     public override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -62,31 +63,58 @@ public class DraggableUIView: UIView {
     /// Moving the view to nearest valid point after the drag
     /// - Parameter gesture: gesture object is needed to make the gesture to not go over the head
     private func moveToNearestPoint(_ gesture: UIPanGestureRecognizer){
-        let point: CGPoint = getNearestPoint()
-        UIView.animate(withDuration: 0.2) {
-            self.center = point
-            gesture.setTranslation(.zero, in: self)
+        guard let gestureView = gesture.view else {
+          return
         }
+        
+        let finalPoint = enableVelocity ?
+            getNearestPoint(getVelocityPoint(gesture, gestureView)) : getNearestPoint(self.center)
+        
+        UIView.animate(
+            withDuration: Double(0.2),
+            delay: 0,
+            options: .allowUserInteraction,
+            animations: {
+                gestureView.center = finalPoint
+            }
+        )
+        
+    }
+    
+    /// Get velocity projected points
+    /// - Parameters:
+    ///   - gesture: the pan gesture
+    ///   - gestureView: the view that's moving
+    private func getVelocityPoint(_ gesture: UIPanGestureRecognizer, _ gestureView: UIView) -> CGPoint {
+        let velocity = gesture.velocity(in: gestureView.superview)
+        let magnitude = sqrt((velocity.x * velocity.x) + (velocity.y * velocity.y))
+        let slideMultiplier = magnitude / 200
+        let slideFactor = 0.01 * slideMultiplier
+        return CGPoint(
+          x: gestureView.center.x + (velocity.x * slideFactor),
+          y: gestureView.center.y + (velocity.y * slideFactor)
+        )
     }
     
     /// Getting the nearest point where the view can move it's center to
-    private func getNearestPoint() -> CGPoint {
-        var finalX = self.center.x
-        var finalY = self.center.y
+    /// - Parameter point: Nearest point to calculate the center from
+    private func getNearestPoint(_ point: CGPoint) -> CGPoint {
+        var finalX = point.x // self.center.x
+        var finalY = point.y // self.center.y
         
         switch mode {
         case .fourCorner:
-            finalY = getCornerFinalY()
-            finalX = getCornerFinalX()
+            finalY = getCornerFinalY(point.y)
+            finalX = getCornerFinalX(point.x)
         case .leftRightEdge:
-            finalY = getValidPointY()
-            finalX = getCornerFinalX()
+            finalY = getValidPointY(point.y)
+            finalX = getCornerFinalX(point.x)
         default:
-            finalY = getValidPointY()
-            if self.center.y > self.bounds.height/2, self.center.y < UIScreen.main.bounds.height - bounds.height/2 {
-                finalX = getCornerFinalX()
+            finalY = getValidPointY(point.y)
+            if point.y > self.bounds.height/2, point.y < UIScreen.main.bounds.height - bounds.height/2 {
+                finalX = getCornerFinalX(point.x)
             } else {
-                finalX = getValidPointX()
+                finalX = getValidPointX(point.x)
             }
         }
         
@@ -94,9 +122,10 @@ public class DraggableUIView: UIView {
     }
     
     /// Getting the valid X point (within the bounds)
-    private func getValidPointX() -> CGFloat {
+    /// - Parameter pointX
+    private func getValidPointX(_ pointX: CGFloat) -> CGFloat {
         // TODO: add a factor to move to edges if factor * self.center.x
-        var finalX = self.center.x
+        var finalX = pointX
         if finalX < self.bounds.width/2 {
             finalX = self.bounds.width/2
         } else if finalX > UIScreen.main.bounds.width - self.bounds.width/2 {
@@ -106,9 +135,10 @@ public class DraggableUIView: UIView {
     }
     
     /// Getting the valid Y point (within the bounds)
-    private func getValidPointY() -> CGFloat {
+    /// - Parameter pointY
+    private func getValidPointY(_ pointY: CGFloat) -> CGFloat {
         // TODO: add a factor to move to edges if factor * self.center.y
-        var finalY = self.center.y
+        var finalY = pointY
         if finalY < self.bounds.height/2 {
             finalY = self.bounds.height/2
         } else if finalY > UIScreen.main.bounds.height - self.bounds.height/2 {
@@ -118,7 +148,8 @@ public class DraggableUIView: UIView {
     }
     
     /// Getting the corner X point
-    private func getCornerFinalX() -> CGFloat {
+    /// - Parameter pointX
+    private func getCornerFinalX(_ pointX: CGFloat) -> CGFloat {
         var finalX: CGFloat = UIScreen.main.bounds.width - bounds.width/2
         if self.center.x <= UIScreen.main.bounds.width/2 {
             finalX = bounds.width/2
@@ -127,7 +158,8 @@ public class DraggableUIView: UIView {
     }
     
     /// Getting the corner Y point
-    private func getCornerFinalY() -> CGFloat {
+    /// - Parameter pointY
+    private func getCornerFinalY(_ pointY: CGFloat) -> CGFloat {
         var finalY: CGFloat = UIScreen.main.bounds.height - bounds.height/2
         if self.center.y <= UIScreen.main.bounds.height/2 {
             finalY = bounds.height/2
