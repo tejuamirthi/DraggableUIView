@@ -76,22 +76,45 @@ public class DraggableUIView: UIView {
         
         switch mode {
         case .fourCorner:
-            if self.center.y <= UIScreen.main.bounds.height/2 {
-                finalY = bounds.height/2
-            } else {
-                finalY = UIScreen.main.bounds.height - bounds.height/2
-            }
+            finalY = getCornerFinalY()
+            finalX = getCornerFinalX()
+        case .leftRightEdge:
+            finalY = getValidPointY()
             finalX = getCornerFinalX()
         default:
-            if self.center.y < self.bounds.height/2 {
-                finalY = bounds.height/2
-            } else if self.center.y > UIScreen.main.bounds.height - bounds.height/3 {
-                finalY = UIScreen.main.bounds.height - bounds.height/2
+            finalY = getValidPointY()
+            if self.center.y > self.bounds.height/2, self.center.y < UIScreen.main.bounds.height - bounds.height/2 {
+                finalX = getCornerFinalX()
+            } else {
+                finalX = getValidPointX()
             }
-            finalX = getCornerFinalX()
         }
         
         return CGPoint(x: finalX, y: finalY)
+    }
+    
+    /// Getting the valid X point (within the bounds)
+    private func getValidPointX() -> CGFloat {
+        // TODO: add a factor to move to edges if factor * self.center.x
+        var finalX = self.center.x
+        if finalX < self.bounds.width/2 {
+            finalX = self.bounds.width/2
+        } else if finalX > UIScreen.main.bounds.width - self.bounds.width/2 {
+            finalX = UIScreen.main.bounds.width - self.bounds.width/2
+        }
+        return finalX
+    }
+    
+    /// Getting the valid Y point (within the bounds)
+    private func getValidPointY() -> CGFloat {
+        // TODO: add a factor to move to edges if factor * self.center.y
+        var finalY = self.center.y
+        if finalY < self.bounds.height/2 {
+            finalY = self.bounds.height/2
+        } else if finalY > UIScreen.main.bounds.height - self.bounds.height/2 {
+            finalY = UIScreen.main.bounds.height - self.bounds.height/2
+        }
+        return finalY
     }
     
     /// Getting the corner X point
