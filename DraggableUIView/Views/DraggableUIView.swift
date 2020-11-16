@@ -76,6 +76,14 @@ public class DraggableUIView: UIView {
             options: .allowUserInteraction,
             animations: {
                 gestureView.center = finalPoint
+            },
+            completion: { (success) in
+                guard success else {
+                    return
+                }
+                if self.mode == .topLeftRightBottomClose, finalPoint.y > UIScreen.main.bounds.height {
+                    self.removeFromSuperview()
+                }
             }
         )
         
@@ -109,6 +117,18 @@ public class DraggableUIView: UIView {
         case .leftRightEdge:
             finalY = getValidPointY(point.y)
             finalX = getCornerFinalX(point.x)
+        case .topLeftRightBottomClose:
+            finalX = getCornerFinalX(point.x)
+            
+            if point.y < bounds.height/2 {
+                finalY = bounds.height/2
+            } else if point.y >= UIScreen.main.bounds.height - bounds.height/2{
+                // animate to out of screen and remove view
+                finalY = UIScreen.main.bounds.height + bounds.height/2
+            } else {
+                finalY = getValidPointY(point.y)
+            }
+            
         default:
             finalY = getValidPointY(point.y)
             if point.y > self.bounds.height/2, point.y < UIScreen.main.bounds.height - bounds.height/2 {
@@ -151,7 +171,7 @@ public class DraggableUIView: UIView {
     /// - Parameter pointX
     private func getCornerFinalX(_ pointX: CGFloat) -> CGFloat {
         var finalX: CGFloat = UIScreen.main.bounds.width - bounds.width/2
-        if self.center.x <= UIScreen.main.bounds.width/2 {
+        if pointX <= UIScreen.main.bounds.width/2 {
             finalX = bounds.width/2
         }
         return finalX
@@ -161,7 +181,7 @@ public class DraggableUIView: UIView {
     /// - Parameter pointY
     private func getCornerFinalY(_ pointY: CGFloat) -> CGFloat {
         var finalY: CGFloat = UIScreen.main.bounds.height - bounds.height/2
-        if self.center.y <= UIScreen.main.bounds.height/2 {
+        if pointY <= UIScreen.main.bounds.height/2 {
             finalY = bounds.height/2
         }
         return finalY
