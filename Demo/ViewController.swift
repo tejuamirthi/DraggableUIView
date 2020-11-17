@@ -16,8 +16,9 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         let draggableView = DraggableUIView(frame: .zero)
+        draggableView.mode = .leftRightEdge
+        draggableView.enableRemove = true
         view.addSubview(draggableView)
-        draggableView.mode = .topBottomLeftRight
         draggableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             draggableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
