@@ -8,11 +8,27 @@
 
 import UIKit
 
+public struct DraggableCloseConfig {
+    public init(tint: UIColor? = UIColor.black.withAlphaComponent(0.6), height: CGFloat = 80, image: UIImage? = UIImage(systemName: "xmark.circle")) {
+        self.tintColor = tint
+        self.height = height
+        self.image = image
+    }
+    
+    public var image: UIImage?
+    public var tintColor: UIColor?
+    public var height: CGFloat
+    public var width: CGFloat = 150
+    public var contentMode: UIView.ContentMode = .scaleAspectFit
+}
+
 public class DraggableUIView: UIView {
     
     public var mode: DraggableMode = .fourCorner
     public var enableVelocity: Bool = true
     public var enableRemove: Bool = true
+    public var draggableCloseConfig = DraggableCloseConfig()
+    
     
     public override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -45,18 +61,16 @@ public class DraggableUIView: UIView {
         shadowView.tag = 123
         superView.addSubview(shadowView)
         shadowView.translatesAutoresizingMaskIntoConstraints = false
-//        shadowView.backgroundColor = .gray
         
         
-        shadowView.image = UIImage(systemName: "xmark.circle")
-        shadowView.contentMode = .scaleAspectFit
+        shadowView.image = draggableCloseConfig.image
+        shadowView.tintColor = draggableCloseConfig.tintColor
+        shadowView.contentMode = draggableCloseConfig.contentMode
         
         NSLayoutConstraint.activate([
-            shadowView.heightAnchor.constraint(equalToConstant: 80),
+            shadowView.heightAnchor.constraint(equalToConstant: draggableCloseConfig.height),
             shadowView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            shadowView.widthAnchor.constraint(equalToConstant: 150),
-//            shadowView.leftAnchor.constraint(equalTo: superView.leftAnchor),
-//            shadowView.rightAnchor.constraint(equalTo: superView.rightAnchor),
+            shadowView.widthAnchor.constraint(equalToConstant: draggableCloseConfig.width),
             shadowView.bottomAnchor.constraint(equalTo: superView.bottomAnchor, constant: -30)
         ])
     }
