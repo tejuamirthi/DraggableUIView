@@ -12,6 +12,7 @@ public class DraggableUIView: UIView {
     
     public var mode: DraggableMode = .fourCorner
     public var enableVelocity: Bool = true
+    public var enableRemove: Bool = true
     
     public override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -27,6 +28,37 @@ public class DraggableUIView: UIView {
         let panRecognizer = UIPanGestureRecognizer(target:self, action:#selector(detectPan))
         self.gestureRecognizers = [panRecognizer]
         panRecognizer.delegate = self
+        
+        // new bottom view
+        
+    }
+    
+    public override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        
+        guard enableRemove, let superView = self.superview else {
+            return
+        }
+        superView.viewWithTag(123)?.removeFromSuperview()
+        let shadowView = UIImageView()
+        shadowView.isHidden = true
+        shadowView.tag = 123
+        superView.addSubview(shadowView)
+        shadowView.translatesAutoresizingMaskIntoConstraints = false
+//        shadowView.backgroundColor = .gray
+        
+        
+        shadowView.image = UIImage(systemName: "xmark.circle")
+        shadowView.contentMode = .scaleAspectFit
+        
+        NSLayoutConstraint.activate([
+            shadowView.heightAnchor.constraint(equalToConstant: 80),
+            shadowView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            shadowView.widthAnchor.constraint(equalToConstant: 150),
+//            shadowView.leftAnchor.constraint(equalTo: superView.leftAnchor),
+//            shadowView.rightAnchor.constraint(equalTo: superView.rightAnchor),
+            shadowView.bottomAnchor.constraint(equalTo: superView.bottomAnchor, constant: -30)
+        ])
     }
     
     /// Called when there's a pan gesture over the view
@@ -54,8 +86,26 @@ public class DraggableUIView: UIView {
         self.center = CGPoint(x: point.x, y: point.y)
         recognizer.setTranslation(.zero, in: self)
         
-        if recognizer.state == .ended {
+        if recognizer.state == .ended || recognizer.state == .cancelled {
+            if enableRemove, let shadowView = self.superview?.viewWithTag(123) {
+                let shadowBounds = shadowView.bounds
+                shadowView.isHidden = true
+                if shadowView.center.x + shadowBounds.width/2 > self.center.x, shadowView.center.x - shadowBounds.width/2 < self.center.x, shadowView.center.y - shadowBounds.height/2 < self.center.y {
+                    self.removeFromSuperview()
+                    shadowView.removeFromSuperview()
+                }
+            }
+            
+            
             moveToNearestPoint(recognizer)
+        }
+        
+        
+        if recognizer.state == .began {
+            DispatchQueue.main.async {
+                self.superview?.viewWithTag(123)?.isHidden = false
+            }
+            
         }
         
     }
