@@ -22,13 +22,20 @@ public struct DraggableCloseConfig {
     public var contentMode: UIView.ContentMode = .scaleAspectFit
 }
 
+public struct DraggableViewConfig {
+    public init() {
+        
+    }
+    
+    public var draggableCloseConfig: DraggableCloseConfig = DraggableCloseConfig()
+    public var enableRemove: Bool = false
+    public var enableVelocity: Bool = true
+    public var mode: DraggableMode = .fourCorner
+}
+
 public class DraggableUIView: UIView {
     
-    public var mode: DraggableMode = .fourCorner
-    public var enableVelocity: Bool = true
-    public var enableRemove: Bool = true
-    public var draggableCloseConfig = DraggableCloseConfig()
-    
+    public var config: DraggableViewConfig = DraggableViewConfig()
     
     public override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -52,7 +59,7 @@ public class DraggableUIView: UIView {
     public override func didMoveToSuperview() {
         super.didMoveToSuperview()
         
-        guard enableRemove, let superView = self.superview else {
+        guard self.config.enableRemove, let superView = self.superview else {
             return
         }
         superView.viewWithTag(123)?.removeFromSuperview()
@@ -63,14 +70,14 @@ public class DraggableUIView: UIView {
         shadowView.translatesAutoresizingMaskIntoConstraints = false
         
         
-        shadowView.image = draggableCloseConfig.image
-        shadowView.tintColor = draggableCloseConfig.tintColor
-        shadowView.contentMode = draggableCloseConfig.contentMode
+        shadowView.image = self.config.draggableCloseConfig.image
+        shadowView.tintColor = self.config.draggableCloseConfig.tintColor
+        shadowView.contentMode = self.config.draggableCloseConfig.contentMode
         
         NSLayoutConstraint.activate([
-            shadowView.heightAnchor.constraint(equalToConstant: draggableCloseConfig.height),
+            shadowView.heightAnchor.constraint(equalToConstant: self.config.draggableCloseConfig.height),
             shadowView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            shadowView.widthAnchor.constraint(equalToConstant: draggableCloseConfig.width),
+            shadowView.widthAnchor.constraint(equalToConstant: self.config.draggableCloseConfig.width),
             shadowView.bottomAnchor.constraint(equalTo: superView.bottomAnchor, constant: -30)
         ])
     }
@@ -101,7 +108,7 @@ public class DraggableUIView: UIView {
         recognizer.setTranslation(.zero, in: self)
         
         if recognizer.state == .ended || recognizer.state == .cancelled {
-            if enableRemove, let shadowView = self.superview?.viewWithTag(123) {
+            if self.config.enableRemove, let shadowView = self.superview?.viewWithTag(123) {
                 let shadowBounds = shadowView.bounds
                 shadowView.isHidden = true
                 if shadowView.center.x + shadowBounds.width/2 > self.center.x, shadowView.center.x - shadowBounds.width/2 < self.center.x, shadowView.center.y - shadowBounds.height/2 < self.center.y {
@@ -131,12 +138,12 @@ public class DraggableUIView: UIView {
           return
         }
         
-        let finalPoint = enableVelocity ?
+        let finalPoint = self.config.enableVelocity ?
             getNearestPoint(getVelocityPoint(gesture, gestureView)) : getNearestPoint(self.center)
         
         UIView.animate(
             withDuration: Double(0.2),
-            delay: 0,
+            delay: 0.08,
             options: .allowUserInteraction,
             animations: {
                 gestureView.center = finalPoint
@@ -145,7 +152,7 @@ public class DraggableUIView: UIView {
                 guard success else {
                     return
                 }
-                if self.enableRemove, finalPoint.y > UIScreen.main.bounds.height {
+                if self.config.enableRemove, finalPoint.y > UIScreen.main.bounds.height {
                     self.removeFromSuperview()
                 }
             }
@@ -174,7 +181,7 @@ public class DraggableUIView: UIView {
         var finalX = point.x // self.center.x
         var finalY = point.y // self.center.y
         
-        switch mode {
+        switch self.config.mode {
         case .anywhere:
             finalX = getValidPointX(point.x)
             finalY = getValidPointY(point.y)
@@ -205,7 +212,7 @@ public class DraggableUIView: UIView {
             }
         }
         
-        if enableRemove, point.y >= UIScreen.main.bounds.height - bounds.height/2{
+        if self.config.enableRemove, point.y >= UIScreen.main.bounds.height - bounds.height/2{
             // animate to out of screen and remove view
             finalY = UIScreen.main.bounds.height + bounds.height/2
         }
