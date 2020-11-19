@@ -145,7 +145,7 @@ public class DraggableUIView: UIView {
                 guard success else {
                     return
                 }
-                if self.mode == .topLeftRightBottomClose, finalPoint.y > UIScreen.main.bounds.height {
+                if self.enableRemove, finalPoint.y > UIScreen.main.bounds.height {
                     self.removeFromSuperview()
                 }
             }
@@ -203,6 +203,11 @@ public class DraggableUIView: UIView {
             } else {
                 finalX = getValidPointX(point.x)
             }
+        }
+        
+        if enableRemove, point.y >= UIScreen.main.bounds.height - bounds.height/2{
+            // animate to out of screen and remove view
+            finalY = UIScreen.main.bounds.height + bounds.height/2
         }
         
         return CGPoint(x: finalX, y: finalY)
