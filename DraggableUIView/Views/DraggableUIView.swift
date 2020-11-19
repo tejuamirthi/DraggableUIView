@@ -175,6 +175,9 @@ public class DraggableUIView: UIView {
         var finalY = point.y // self.center.y
         
         switch mode {
+        case .anywhere:
+            finalX = getValidPointX(point.x)
+            finalY = getValidPointY(point.y)
         case .fourCorner:
             finalY = getCornerFinalY(point.y)
             finalX = getCornerFinalX(point.x)

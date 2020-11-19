@@ -8,6 +8,7 @@
 
 
 public enum DraggableMode: Int {
+    case anywhere
     case fourCorner
     case leftRightEdge
     case topBottomLeftRight
