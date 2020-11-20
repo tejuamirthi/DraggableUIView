@@ -18,6 +18,8 @@
 		609F2DCD256057B300CF9275 /* DraggableUIView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 609F2DA7256051ED00CF9275 /* DraggableUIView.framework */; };
 		609F2DCE256057B300CF9275 /* DraggableUIView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 609F2DA7256051ED00CF9275 /* DraggableUIView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		609F2DD525605C3100CF9275 /* DraggableMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609F2DD425605C3100CF9275 /* DraggableMode.swift */; };
+		BD654118256833E8001AA388 /* DraggableCloseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD654117256833E8001AA388 /* DraggableCloseConfig.swift */; };
+		BD65411B25683415001AA388 /* DraggableViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD65411A25683415001AA388 /* DraggableViewConfig.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +60,8 @@
 		609F2DC62560539100CF9275 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		609F2DCA256054F800CF9275 /* DraggableUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableUIView.swift; sourceTree = "<group>"; };
 		609F2DD425605C3100CF9275 /* DraggableMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableMode.swift; sourceTree = "<group>"; };
+		BD654117256833E8001AA388 /* DraggableCloseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableCloseConfig.swift; sourceTree = "<group>"; };
+		BD65411A25683415001AA388 /* DraggableViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraggableViewConfig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +138,8 @@
 			isa = PBXGroup;
 			children = (
 				609F2DD425605C3100CF9275 /* DraggableMode.swift */,
+				BD654117256833E8001AA388 /* DraggableCloseConfig.swift */,
+				BD65411A25683415001AA388 /* DraggableViewConfig.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -260,7 +266,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD654118256833E8001AA388 /* DraggableCloseConfig.swift in Sources */,
 				609F2DD525605C3100CF9275 /* DraggableMode.swift in Sources */,
+				BD65411B25683415001AA388 /* DraggableViewConfig.swift in Sources */,
 				609F2DCB256054F800CF9275 /* DraggableUIView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
