@@ -160,7 +160,7 @@ public class DraggableUIView: UIView {
     }
 }
 
-// MARK: Points extension
+// MARK: - Points extension
 extension DraggableUIView {
     /// Get velocity projected points
     /// - Parameters:
@@ -207,7 +207,7 @@ extension DraggableUIView {
     
 }
 
-// MARK: Single direction values in x and y axis
+// MARK: - Single direction values in x and y axis
 extension DraggableUIView {
     
     /// Getting the valid X point (within the bounds)
@@ -257,7 +257,7 @@ extension DraggableUIView {
     }
 }
 
-// MARK: Gesture delegate
+// MARK: - Gesture delegate
 extension DraggableUIView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
