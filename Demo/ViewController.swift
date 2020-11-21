@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         let draggableView = DraggableUIView(frame: .zero)
-        draggableView.config.mode = .anywhere
+        draggableView.config.mode = .topBottomLeftRight
         draggableView.config.enableRemove = true
         draggableView.config.draggableCloseConfig.height = 60
         view.addSubview(draggableView)
@@ -28,11 +28,11 @@ class ViewController: UIViewController {
             draggableView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width/2.5)
         
         ])
-        draggableView.backgroundColor = .white
+        draggableView.backgroundColor = .red
         
         
         
-        view.backgroundColor = .red
+        view.backgroundColor = .white
     }
 
 

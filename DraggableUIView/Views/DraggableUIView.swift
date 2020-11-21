@@ -38,23 +38,19 @@ public class DraggableUIView: UIView {
             return
         }
         superView.viewWithTag(123)?.removeFromSuperview()
-        let shadowView = UIImageView()
+        let shadowView = BackgroundCloseView(config: self.config.draggableCloseConfig)
         shadowView.isHidden = true
         shadowView.tag = 123
         superView.addSubview(shadowView)
         shadowView.translatesAutoresizingMaskIntoConstraints = false
         
-        
-        shadowView.image = self.config.draggableCloseConfig.image
-        shadowView.tintColor = self.config.draggableCloseConfig.tintColor
-        shadowView.contentMode = self.config.draggableCloseConfig.contentMode
-        
         NSLayoutConstraint.activate([
-            shadowView.heightAnchor.constraint(equalToConstant: self.config.draggableCloseConfig.height),
+            shadowView.heightAnchor.constraint(equalToConstant: self.config.draggableCloseConfig.height + 40),
             shadowView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            shadowView.widthAnchor.constraint(equalToConstant: self.config.draggableCloseConfig.width),
-            shadowView.bottomAnchor.constraint(equalTo: superView.bottomAnchor, constant: -30)
+            shadowView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
+            shadowView.bottomAnchor.constraint(equalTo: superView.bottomAnchor)
         ])
+        
     }
     
     /// Called when there's a pan gesture over the view
