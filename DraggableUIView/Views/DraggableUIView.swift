@@ -158,7 +158,10 @@ public class DraggableUIView: UIView {
             }
         )
     }
-    
+}
+
+// MARK: Points extension
+extension DraggableUIView {
     /// Get velocity projected points
     /// - Parameters:
     ///   - gesture: the pan gesture
@@ -201,6 +204,11 @@ public class DraggableUIView: UIView {
         
         return CGPoint(x: finalX, y: finalY)
     }
+    
+}
+
+// MARK: Single direction values in x and y axis
+extension DraggableUIView {
     
     /// Getting the valid X point (within the bounds)
     /// - Parameter pointX
@@ -249,7 +257,7 @@ public class DraggableUIView: UIView {
     }
 }
 
-
+// MARK: Gesture delegate
 extension DraggableUIView: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
