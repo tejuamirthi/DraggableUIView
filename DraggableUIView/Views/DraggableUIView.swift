@@ -83,38 +83,46 @@ public class DraggableUIView: UIView {
         recognizer.setTranslation(.zero, in: self)
         
         if (recognizer.state == .ended || recognizer.state == .cancelled), let gestureView = recognizer.view {
-            if self.config.enableRemove, let shadowView = self.superview?.viewWithTag(123) {
-                let shadowBounds = shadowView.bounds
-                shadowView.isHidden = true
-                let velocityPoint = getVelocityPoint(recognizer, gestureView)
-                if shadowView.center.x + shadowBounds.width/2 > velocityPoint.x, shadowView.center.x - shadowBounds.width/2 < velocityPoint.x, shadowView.center.y - shadowBounds.height/2 < velocityPoint.y {
-                    animationFunction(duration: 0.1, delay: 0.0, animation: {
-                        gestureView.center.x = velocityPoint.x
-                        gestureView.center.y = UIScreen.main.bounds.height + gestureView.bounds.height/2
-                    }, completionAnimation: {
-                        self.removeFromSuperview()
-                        shadowView.removeFromSuperview()
-                    })
-                    return
-                }
-            }
-            
-            moveToNearestPoint(recognizer, gestureView)
+            afterPanEnded(recognizer, gestureView)
         }
-        
         
         if recognizer.state == .began {
             DispatchQueue.main.async {
                 self.superview?.viewWithTag(123)?.isHidden = false
             }
-            
         }
         
     }
     
+    /// Method that is called after the pan gestures ended or cancelled
+    /// - Parameters:
+    ///   - recognizer: gesture object is needed to make the gesture to not go over the head
+    ///   - gestureView: view on which the gesture is applied
+    private func afterPanEnded(_ recognizer: UIPanGestureRecognizer, _ gestureView: UIView) {
+        // removing the view from superview on some conditions
+        if self.config.enableRemove, let shadowView = self.superview?.viewWithTag(123) {
+            let shadowBounds = shadowView.bounds
+            shadowView.isHidden = true
+            let velocityPoint = getVelocityPoint(recognizer, gestureView)
+            if shadowView.center.x + shadowBounds.width/2 > velocityPoint.x, shadowView.center.x - shadowBounds.width/2 < velocityPoint.x, shadowView.center.y - shadowBounds.height/2 < velocityPoint.y {
+                animationFunction(duration: 0.1, delay: 0.0, animation: {
+                    gestureView.center.x = velocityPoint.x
+                    gestureView.center.y = UIScreen.main.bounds.height + gestureView.bounds.height/2
+                }, completionAnimation: {
+                    self.removeFromSuperview()
+                    shadowView.removeFromSuperview()
+                })
+                return
+            }
+        }
+        // if it reached here, we are moving to some point on the visible screen
+        moveToNearestPoint(recognizer, gestureView)
+    }
+    
     /// Moving the view to nearest valid point after the drag
-    /// - Parameter gesture: gesture object is needed to make the gesture to not go over the head
-    /// - Parameter gestureView: view on which the gesture is applied
+    /// - Parameters:
+    ///   - recognizer: gesture object is needed to make the gesture to not go over the head
+    ///   - gestureView: view on which the gesture is applied
     private func moveToNearestPoint(_ gesture: UIPanGestureRecognizer, _ gestureView: UIView){
         
         let finalPoint = self.config.enableVelocity ?
