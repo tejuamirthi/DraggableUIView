@@ -82,18 +82,24 @@ public class DraggableUIView: UIView {
         self.center = CGPoint(x: point.x, y: point.y)
         recognizer.setTranslation(.zero, in: self)
         
-        if recognizer.state == .ended || recognizer.state == .cancelled {
+        if (recognizer.state == .ended || recognizer.state == .cancelled), let gestureView = recognizer.view {
             if self.config.enableRemove, let shadowView = self.superview?.viewWithTag(123) {
                 let shadowBounds = shadowView.bounds
                 shadowView.isHidden = true
-                if shadowView.center.x + shadowBounds.width/2 > self.center.x, shadowView.center.x - shadowBounds.width/2 < self.center.x, shadowView.center.y - shadowBounds.height/2 < self.center.y {
-                    self.removeFromSuperview()
-                    shadowView.removeFromSuperview()
+                let velocityPoint = getVelocityPoint(recognizer, gestureView)
+                if shadowView.center.x + shadowBounds.width/2 > velocityPoint.x, shadowView.center.x - shadowBounds.width/2 < velocityPoint.x, shadowView.center.y - shadowBounds.height/2 < velocityPoint.y {
+                    animationFunction(duration: 0.1, delay: 0.0, animation: {
+                        gestureView.center.x = velocityPoint.x
+                        gestureView.center.y = UIScreen.main.bounds.height + gestureView.bounds.height/2
+                    }, completionAnimation: {
+                        self.removeFromSuperview()
+                        shadowView.removeFromSuperview()
+                    })
+                    return
                 }
             }
             
-            
-            moveToNearestPoint(recognizer)
+            moveToNearestPoint(recognizer, gestureView)
         }
         
         
@@ -108,31 +114,41 @@ public class DraggableUIView: UIView {
     
     /// Moving the view to nearest valid point after the drag
     /// - Parameter gesture: gesture object is needed to make the gesture to not go over the head
-    private func moveToNearestPoint(_ gesture: UIPanGestureRecognizer){
-        guard let gestureView = gesture.view else {
-          return
-        }
+    /// - Parameter gestureView: view on which the gesture is applied
+    private func moveToNearestPoint(_ gesture: UIPanGestureRecognizer, _ gestureView: UIView){
         
         let finalPoint = self.config.enableVelocity ?
             getNearestPoint(getVelocityPoint(gesture, gestureView)) : getNearestPoint(self.center)
+
+        animationFunction(animation: {
+            gestureView.center = finalPoint
+        })
         
+    }
+    
+    /// UIView animation function
+    /// - Parameters:
+    ///   - duration: duration of the
+    ///   - delay: delay for the animation
+    ///   - options: animation options
+    ///   - animation: animtion block
+    ///   - completionAnimation: animation completion block
+    private func animationFunction(duration: Double = Double(0.2), delay: TimeInterval = 0.08, options: UIView.AnimationOptions = .allowUserInteraction, animation: @escaping () -> (), completionAnimation: (()->())? = nil) {
         UIView.animate(
-            withDuration: Double(0.2),
-            delay: 0.08,
-            options: .allowUserInteraction,
+            withDuration: duration,
+            delay: delay,
+            options: options,
             animations: {
-                gestureView.center = finalPoint
+                animation()
+                // gestureView.center = finalPoint
             },
             completion: { (success) in
-                guard success else {
+                guard success, let completion = completionAnimation else {
                     return
                 }
-                if self.config.enableRemove, finalPoint.y > UIScreen.main.bounds.height {
-                    self.removeFromSuperview()
-                }
+                completion()
             }
         )
-        
     }
     
     /// Get velocity projected points
@@ -173,11 +189,6 @@ public class DraggableUIView: UIView {
             } else {
                 finalX = getValidPointX(point.x)
             }
-        }
-        
-        if self.config.enableRemove, point.y >= UIScreen.main.bounds.height - bounds.height/2{
-            // animate to out of screen and remove view
-            finalY = UIScreen.main.bounds.height + bounds.height/2
         }
         
         return CGPoint(x: finalX, y: finalY)
