@@ -3,4 +3,4 @@ A draggable view using UIView. We can drag the view to any edge of the screen. I
 
 Sample use of project
 
-<img src="Screen Recording 2020-11-21 at 22.44.26.gif" width = "230px" height = "500px"/>
+<img src="sample.gif" width = "230px" height = "500px"/>
