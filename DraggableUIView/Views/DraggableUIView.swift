@@ -166,18 +166,6 @@ public class DraggableUIView: UIView {
         case .leftRightEdge:
             finalY = getValidPointY(point.y)
             finalX = getCornerFinalX(point.x)
-        case .topLeftRightBottomClose:
-            finalX = getCornerFinalX(point.x)
-            
-            if point.y < bounds.height/2 {
-                finalY = bounds.height/2
-            } else if point.y >= UIScreen.main.bounds.height - bounds.height/2{
-                // animate to out of screen and remove view
-                finalY = UIScreen.main.bounds.height + bounds.height/2
-            } else {
-                finalY = getValidPointY(point.y)
-            }
-            
         default:
             finalY = getValidPointY(point.y)
             if point.y > self.bounds.height/2, point.y < UIScreen.main.bounds.height - bounds.height/2 {
