@@ -45,12 +45,17 @@ public class DraggableUIView: UIView {
         shadowView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            shadowView.heightAnchor.constraint(equalToConstant: self.config.draggableCloseConfig.height + 40),
             shadowView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             shadowView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
             shadowView.bottomAnchor.constraint(equalTo: superView.bottomAnchor)
         ])
-        
+        switch config.draggableCloseConfig.mode {
+        case .image:
+            let width: CGFloat = config.draggableCloseConfig.width + config.draggableCloseConfig.paddingForImage.left + config.draggableCloseConfig.paddingForImage.right
+            shadowView.widthAnchor.constraint(equalToConstant: width).isActive = true
+        default:
+            shadowView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+        }
     }
     
     /// Called when there's a pan gesture over the view
@@ -96,17 +101,16 @@ public class DraggableUIView: UIView {
     ///   - gestureView: view on which the gesture is applied
     private func afterPanEnded(_ recognizer: UIPanGestureRecognizer, _ gestureView: UIView) {
         // removing the view from superview on some conditions
-        if self.config.enableRemove, let shadowView = self.superview?.viewWithTag(123) {
-            let shadowBounds = shadowView.bounds
-            shadowView.isHidden = true
+        if self.config.enableRemove, let backgroundView = self.superview?.viewWithTag(123) {
+            backgroundView.isHidden = true
             let velocityPoint = getVelocityPoint(recognizer, gestureView)
-            if shadowView.center.x + shadowBounds.width/2 > velocityPoint.x, shadowView.center.x - shadowBounds.width/2 < velocityPoint.x, shadowView.center.y - shadowBounds.height/2 < velocityPoint.y {
+            if isEnd(backgroundView: backgroundView, velocityPoint: velocityPoint) {
                 animationFunction(duration: 0.1, delay: 0.0, animation: {
                     gestureView.center.x = velocityPoint.x
                     gestureView.center.y = UIScreen.main.bounds.height + gestureView.bounds.height/2
                 }, completionAnimation: {
                     self.removeFromSuperview()
-                    shadowView.removeFromSuperview()
+                    backgroundView.removeFromSuperview()
                 })
                 return
             }
@@ -114,6 +118,26 @@ public class DraggableUIView: UIView {
         // if it reached here, we are moving to some point on the visible screen
         moveToNearestPoint(recognizer, gestureView)
     }
+    
+    /// This method helps to identify the trajectory of the dragged view if it's going out of bounds
+    /// Note:  This method only works when enableRemove is true
+    /// - Parameters:
+    ///   - backgroundView: close button background
+    ///   - velocityPoint: the projected point
+    /// - Returns: true/false, whether to remove the draggable view or not
+    private func isEnd(backgroundView: UIView, velocityPoint: CGPoint) -> Bool {
+        let isEndY: Bool = backgroundView.center.y - backgroundView.bounds.height/2 < velocityPoint.y
+        switch config.draggableCloseConfig.mode {
+        case .imageFillWithoutGradient, .imageWithGradient:
+            return isEndY
+        default:
+            break
+        }
+        let isEndX: Bool = (backgroundView.center.x + backgroundView.bounds.width/2 > velocityPoint.x) && (backgroundView.center.x - backgroundView.bounds.width/2 < velocityPoint.x)
+        // only image case
+        return isEndY && isEndX
+    }
+    
     
     /// Moving the view to nearest valid point after the drag
     /// - Parameters:
