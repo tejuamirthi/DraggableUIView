@@ -36,16 +36,17 @@ class BackgroundCloseView: UIView {
         
         
         imageView.image = self.config.image
-        imageView.tintColor = self.config.tintColor
+        imageView.tintColor = self.config.imageTintColor
         imageView.contentMode = self.config.contentMode
         
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: self.config.height),
             imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: self.config.width),
-            imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16)
+            imageView.widthAnchor.constraint(equalToConstant: self.config.width)
         ])
         
+        self.topAnchor.constraint(equalTo: imageView.topAnchor, constant: -config.paddingForImage.top).isActive = true
+        self.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: config.paddingForImage.bottom + 20).isActive = true
     }
     
     override func layoutSubviews() {
@@ -55,16 +56,16 @@ class BackgroundCloseView: UIView {
     
     private func addGradientLayer() {
         self.viewWithTag(9909)?.removeFromSuperview()
-        
+        guard config.mode == .imageWithGradient else {
+            return
+        }
         let backgroundView = UIView()
         backgroundView.tag = 9909
         backgroundView.backgroundColor = .clear
         backgroundView.add(toParent: self)
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = self.bounds
-        let topColor = UIColor.rgbCalculation(redColor: 142, greenColor: 158, blueColor: 171, alphaValue: 0.5)
-        let bottomColor = UIColor.rgbCalculation(redColor: 238, greenColor: 242, blueColor: 243, alphaValue: 0.5)
-        gradientLayer.colors = [topColor.cgColor, bottomColor.cgColor]
+        gradientLayer.colors = config.gradientColors
         backgroundView.layer.insertSublayer(gradientLayer, at: 0)
         self.sendSubviewToBack(backgroundView)
     }
