@@ -13,7 +13,8 @@ public struct DraggableViewConfig {
     }
     
     public var draggableCloseConfig: DraggableCloseConfig = DraggableCloseConfig()
-    public var enableRemove: Bool = false
+    // hide close after animation - nil: No Close, true: hides after animation, false: hides before animation(as soon as the gesture ends)
+    public var hideCloseAfterAnimation: Bool? = nil
     public var enableVelocity: Bool = true
     public var mode: DraggableMode = .fourCorner
 }

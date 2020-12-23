@@ -17,8 +17,10 @@ class ViewController: UIViewController {
         
         let draggableView = DraggableUIView(frame: .zero)
         draggableView.config.mode = .topBottomLeftRight
-        draggableView.config.enableRemove = true
+        draggableView.config.hideCloseAfterAnimation = true
         draggableView.config.draggableCloseConfig.height = 60
+        draggableView.config.draggableCloseConfig.paddingForImage = UIEdgeInsets(top: 16, left: 24, bottom: 16, right: 24)
+        draggableView.config.draggableCloseConfig.mode = .imageFillWithoutGradient
         view.addSubview(draggableView)
         draggableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

@@ -34,7 +34,7 @@ public class DraggableUIView: UIView {
     public override func didMoveToSuperview() {
         super.didMoveToSuperview()
         
-        guard self.config.enableRemove, let superView = self.superview else {
+        guard self.config.hideCloseAfterAnimation != nil, let superView = self.superview else {
             return
         }
         superView.viewWithTag(123)?.removeFromSuperview()
@@ -101,16 +101,21 @@ public class DraggableUIView: UIView {
     ///   - gestureView: view on which the gesture is applied
     private func afterPanEnded(_ recognizer: UIPanGestureRecognizer, _ gestureView: UIView) {
         // removing the view from superview on some conditions
-        if self.config.enableRemove, let backgroundView = self.superview?.viewWithTag(123) {
+        if let afterAnimation = self.config.hideCloseAfterAnimation, let backgroundView = self.superview?.viewWithTag(123) {
             backgroundView.isHidden = true
             let velocityPoint = getVelocityPoint(recognizer, gestureView)
             if isEnd(backgroundView: backgroundView, velocityPoint: velocityPoint) {
+                if !afterAnimation {
+                    backgroundView.removeFromSuperview()
+                }
                 animationFunction(duration: 0.1, delay: 0.0, animation: {
                     gestureView.center.x = velocityPoint.x
                     gestureView.center.y = UIScreen.main.bounds.height + gestureView.bounds.height/2
                 }, completionAnimation: {
                     self.removeFromSuperview()
-                    backgroundView.removeFromSuperview()
+                    if afterAnimation {
+                        backgroundView.removeFromSuperview()
+                    }
                 })
                 return
             }
